@@ -17,7 +17,7 @@ def episode():
     for agent in agents:
         agent.run()
 
-    for i in range(agents):
+    for i in range(len(agents)):
         agents[i].thread.join()
         print(agents[i].fitness)
         if agents[i].fitness < minimalRequiredFitness:
