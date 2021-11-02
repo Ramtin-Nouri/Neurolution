@@ -27,14 +27,17 @@ class Agent(Thread):
         self.id = id
 
     def run(self):
-        self.thread = Thread(target=self.run)
+        self.thread = Thread(target=self.simulate)
+        self.thread.start()
+
+    def simulate(self):
         done = False
         self.fitness = 0
         obs = self.env.reset()
         while not done and self.fitness>-4:
             obs, reward, done, _ =  self.env.step(self.getAction(obs))
             self.fitness += reward
-            if self.id==0:self.env.render()
+            #if self.id==0:self.env.render()
 
     def getAction(self,state):
         return self.brain.decide(state)
