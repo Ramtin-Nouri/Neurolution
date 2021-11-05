@@ -4,7 +4,7 @@ import numpy as np
 from DNA import DNA
 
 class Brain():
-    def __init__(self, dna, inputShape, nActions):
+    def __init__(self, inputShape, nActions):
         self.model = Sequential()
         self.createModel(inputShape, nActions)
 

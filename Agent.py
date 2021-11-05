@@ -4,6 +4,8 @@ import gym
 from DNA import DNA
 from Model import Brain
 
+MAX_STEPS = 1000
+
 # TODO: set seeds?
 class Agent(Thread):
     """
@@ -18,10 +20,8 @@ class Agent(Thread):
         self.env = gym.make(envName)
         self.dna = DNA()
         shapeIn = list(self.env.observation_space.shape)
-        #shapeIn.insert(0,None)
-        shapeIn = (210,160,3)
         shapeOut = self.env.action_space.n
-        self.brain = Brain(self.dna, shapeIn, shapeOut)
+        self.brain = Brain(shapeIn, shapeOut)
         self.fitness = 0
         self.thread = None
         self.id = id
@@ -34,9 +34,11 @@ class Agent(Thread):
         done = False
         self.fitness = 0
         obs = self.env.reset()
-        while not done and self.fitness>-4:
+        nSteps = 0
+        while not done and nSteps < MAX_STEPS:
             obs, reward, done, _ =  self.env.step(self.getAction(obs))
             self.fitness += reward
+            nSteps += 1
             #if self.id==0:self.env.render()
 
     def getAction(self,state):
