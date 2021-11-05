@@ -17,7 +17,7 @@ class DNA():
         pass
 
     def mutate(self):
-        for gen in range(self.gens):
+        for gen in self.gens:
             if len(gen)<2:continue
             weights = gen[0]
             biases = gen[1]
