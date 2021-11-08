@@ -1,8 +1,9 @@
-from re import A
 from Config import *
 from Agent import Agent
 import time
 import numpy as np
+import os
+from datetime import datetime
 # No idead why but I need this to not get an error:
 import tensorflow as tf
 physical_devices = tf.config.list_physical_devices('GPU') 
@@ -47,37 +48,57 @@ def choose_parents(fitness):
     fitness = np.array(fitness) + EPSILON # s.t. we don't divide by 0 if all values are 0
     probabilities = fitness/np.sum(fitness)
     idx = range(len(fitness)) # we only care about their indexes not their values
-    parents = np.random.choice(idx , size=number_of_parents
-        , p = probabilities)
+    parents = np.random.choice(idx , size=number_of_parents, p = probabilities)
     return parents
 
-print("Creating Agents")
-create_agents()
+def init():
+    # Create folder for logging
+    today = datetime.today()
+    time = "%04d-%02d-%02d-%02d-%02d-%02d/" % (today.year,today.month,today.day,today.hour,today.minute,today.second)
+    os.makedirs(F"savedata/{time}")
+    file_writer = tf.summary.create_file_writer(F"savedata/{time}")
+    file_writer.set_as_default()
+    # Log some configs
+    tf.summary.text("Environment", ENV, step=0)
+    tf.summary.text("Number of Agents", str(NUM_AGENTS), step=0)
+    tf.summary.text("Number of Elites", str(ELITE_SIZE), step=0)
+    tf.summary.text("Maximum Simulation Steps", str(MAX_SIM_STEPS), step=0)
+    # Create Agents
+    print("Creating Agents")
+    create_agents()
 
-for i in range(EPISODES):
-    print(F"Running Generation {i}")
-    
-    fitness = episode()
-    
-    # Declare Elite
-    if ELITE_SIZE > 0:
-        elite_idx = np.argsort(-np.array(fitness))[:ELITE_SIZE]
-    else:
-        elite_idx = []
-    
-    parent_idx = choose_parents(fitness)
 
-    new_generation = []
-    # Keep elite as is
-    for idx in elite_idx:
-        new_generation.append(agents[idx])
 
-    for i in range(len(parent_idx)):
-        child_agent = Agent(ENV,i)
-        child_agent.copy_brain(agents[parent_idx[i]])
-        child_agent.mutate()
-        new_generation.append(child_agent)
-    
-    agents = new_generation
-    
-    time.sleep(3) #?
+
+if __name__ == "__main__":
+    init()
+
+    for i in range(EPISODES):
+        print(F"Running Generation {i}")
+        
+        fitness = episode()
+        tf.summary.scalar("Best Scoring Individual", np.max(fitness),step=i)
+        
+        # Declare Elite
+        if ELITE_SIZE > 0:
+            elite_idx = np.argsort(-np.array(fitness))[:ELITE_SIZE]
+        else:
+            elite_idx = []
+        
+        parent_idx = choose_parents(fitness)
+
+        new_generation = []
+        # Keep elite as is
+        for idx in elite_idx:
+            agents[idx].id = idx
+            new_generation.append(agents[idx])
+
+        for i in range(len(parent_idx)):
+            child_agent = Agent(ENV,i+len(elite_idx))
+            child_agent.copy_brain(agents[parent_idx[i]])
+            child_agent.mutate()
+            new_generation.append(child_agent)
+        
+        agents = new_generation
+        
+        time.sleep(3) #?

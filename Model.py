@@ -8,7 +8,7 @@ class Brain():
         self.model = Sequential()
         self.createModel(inputShape, nActions)
 
-    def createModel(self, inputShape, nActions):
+    def createModel2D(self, inputShape, nActions):
         self.model.add(Conv2D(8, (3, 3), activation='relu',padding='same',input_shape=inputShape))
         self.model.add((MaxPooling2D(2,2)))
         self.model.add(Conv2D(16, (3, 3), activation='relu',padding='same'))
@@ -21,6 +21,12 @@ class Brain():
         self.model.add(Dense(128,activation="sigmoid"))
         self.model.add(Dense(nActions,activation="sigmoid"))
         self.model.add(Softmax())
+
+    def createModel(self, inputShape, nActions):
+        self.model.add(Dense(128,activation="sigmoid",input_shape=inputShape))
+        self.model.add(Dense(nActions,activation="sigmoid"))
+        self.model.add(Softmax())
+
 
     def decide(self,state):
         return np.argmax(self.model.predict(np.expand_dims(state,axis=0)))

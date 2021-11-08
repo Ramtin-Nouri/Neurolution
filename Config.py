@@ -5,9 +5,9 @@ Collection of all global variables
 # Number of individuals
 NUM_AGENTS = 10
 # Number of total generations
-EPISODES = 2
+EPISODES = 100
 # OpenAi Gym Environment
-ENV = "PongNoFrameskip-v4"
+ENV = "Pong-ram-v0"
 # Number of individuals to keep unchanged
 ELITE_SIZE = 2
 # Number of maximal simulation steps after which to stop
