@@ -46,20 +46,25 @@ class Agent(Thread):
         if self.id==0:
             for _ in tqdm(range(MAX_SIM_STEPS)):
                 if done:break
-                obs, reward, done, _ =  self.env.step(self.getAction(obs))
+                obs, reward, done, _ =  self.env.step(self.get_action(obs))
                 self.fitness += reward
                 nSteps += 1
         else:
             while not done and nSteps < MAX_SIM_STEPS:
-                obs, reward, done, _ =  self.env.step(self.getAction(obs))
+                obs, reward, done, _ =  self.env.step(self.get_action(obs))
                 self.fitness += reward
                 nSteps += 1
                 #if self.id==0:self.env.render()
 
-    def getAction(self,state):
+    def get_action(self,state):
         return self.brain.decide(state)
     
     def mutate(self):
         self.dna.get_dna()
         self.dna.mutate()
         self.brain.create_brain_from_dna(self.dna.vector)
+
+    def copy_brain(self, otherAgent):
+        otherAgent.dna.get_dna()
+        self.dna.vector = otherAgent.dna.vector.copy()
+        self.dna.set_dna()
