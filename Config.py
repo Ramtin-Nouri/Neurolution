@@ -3,7 +3,7 @@ Collection of all global variables
 """
 
 # Number of individuals
-nAgents = 10
+NUM_AGENTS = 10
 # Number of total generations
 EPISODES = 1
 # OpenAi Gym Environment
