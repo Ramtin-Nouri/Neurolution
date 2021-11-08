@@ -18,10 +18,10 @@ class Agent(Thread):
     """
     def __init__(self, envName,id):
         self.env = gym.make(envName)
-        self.dna = DNA()
         shapeIn = list(self.env.observation_space.shape)
         shapeOut = self.env.action_space.n
         self.brain = Brain(shapeIn, shapeOut)
+        self.dna = DNA(self.brain)
         self.fitness = 0
         self.thread = None
         self.id = id
@@ -43,3 +43,7 @@ class Agent(Thread):
 
     def getAction(self,state):
         return self.brain.decide(state)
+    
+    def mutate(self):
+        self.dna.mutate()
+        self.brain.create_brain_from_dna(self.dna.vector)

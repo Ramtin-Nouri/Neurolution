@@ -10,9 +10,8 @@ tf.config.experimental.set_memory_growth(physical_devices[0], True)
 nAgents = 10
 EPISODES = 1
 ENV = "PongNoFrameskip-v4"
-minimalRequiredFitness = -20
 
-def createAgents():
+def create_agents():
     global agents
     agents = []
     for i in range(nAgents):
@@ -26,13 +25,9 @@ def episode():
     fitness=[]
     for i in range(len(agents)):
         agents[i].thread.join()
-        print(agents[i].fitness)
-        fitness.apend(agents[i].fitness)
-        if agents[i].fitness < minimalRequiredFitness:
-            agents[i] = Agent(ENV,i)
-        else:
-            weights = [layer.get_weights() for layer in agents[i].brain.model.layers]
-            agents[i].dna.setGens(weights)
+        print(F"Fitness of agent {i}: {agents[i].fitness}")
+        fitness.append(agents[i].fitness)
+    return fitness
     
 
 def mutate():
@@ -40,12 +35,16 @@ def mutate():
     for agent in agents:
         agent.dna.mutate()
 
+def choose_parents(fitness):
+    pass
+
 print("Creating Agents")
-createAgents()
+create_agents()
 
 for i in range(EPISODES):
     print(F"Running Generation {i}")
-    episode()
+    fitness = episode()
+    choose_parents(fitness)
     #cross()
     mutate()
     time.sleep(3) #?

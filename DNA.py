@@ -1,33 +1,26 @@
 import numpy as np
-
+from Model import Brain
+from pygad import kerasga
 class DNA():
 
     #code = []
-    def __init__(self):
+    def __init__(self,brain):
         self.mutationFactor = 0.05
         self.initializeRandom()
+        self.brain = brain
 
     def initializeRandom(self):
-        pass #done anyway?
+        pass
 
-    def setGens(self,weights):
-        self.gens = weights
+    def get_dna(self,weights):
+        self.vector = kerasga.model_weights_as_vector(self.brain.model)
 
     def crossover(self, otherDNA):
         pass
 
     def mutate(self):
-        for gen in self.gens:
-            if len(gen)<2:continue
-            weights = gen[0]
-            biases = gen[1]
-
-            mask = np.random.choice([0, 1], size=weights.shape, p=((1 - self.mutationFactor), self.mutationFactor)).astype(np.bool)
-            r = np.random.rand(*weights.shape)*np.max(weights)
-            weights[mask] = r[mask]
-
-            mask = np.random.choice([0, 1], size=biases.shape, p=((1 - self.mutationFactor), self.mutationFactor)).astype(np.bool)
-            r = np.random.rand(*biases.shape)*np.max(biases)
-            biases[mask] = r[mask]
+        mask = np.random.choice([0, 1], size=len(self.vector), p=((1 - self.mutationFactor), self.mutationFactor)).astype(np.bool)
+        rands = np.random.uniform(low=-1,high=1,size=len(self.vector))
+        self.vector[mask] = rands[mask]
 
 
