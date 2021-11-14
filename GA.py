@@ -4,6 +4,7 @@ import time
 import numpy as np
 import os
 from datetime import datetime
+import signal
 # No idead why but I need this to not get an error:
 import tensorflow as tf
 physical_devices = tf.config.list_physical_devices('GPU') 
@@ -67,15 +68,25 @@ def init():
     print("Creating Agents")
     create_agents()
 
-
+def close_signal(sig,frame):
+    global should_run
+    print("Ctrl-C detected. Quitting...")
+    should_run = False
+    for agent in agents:
+        agent.should_run = False
+    for agent in agents:
+        agent.thread.join()
 
 
 if __name__ == "__main__":
+    should_run = True
+    signal.signal(signal.SIGINT, close_signal)
     init()
 
     for i in range(EPISODES):
+        if not should_run:break #Quit condition
+
         print(F"Running Generation {i}")
-        
         fitness = episode()
         tf.summary.scalar("Best Scoring Individual", np.max(fitness),step=i)
         

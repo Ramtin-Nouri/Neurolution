@@ -33,6 +33,7 @@ class Agent(Thread):
         self.fitness = 0
         self.thread = None
         self.id = id
+        self.should_run = True
 
     def run(self):
         self.thread = Thread(target=self.simulate)
@@ -45,12 +46,12 @@ class Agent(Thread):
         nSteps = 0
         if self.id==0:
             for _ in tqdm(range(MAX_SIM_STEPS)):
-                if done:break
+                if done or not self.should_run :break
                 obs, reward, done, _ =  self.env.step(self.get_action(obs))
                 self.fitness += reward
                 nSteps += 1
         else:
-            while not done and nSteps < MAX_SIM_STEPS:
+            while not done and self.should_run and nSteps < MAX_SIM_STEPS:
                 obs, reward, done, _ =  self.env.step(self.get_action(obs))
                 self.fitness += reward
                 nSteps += 1
