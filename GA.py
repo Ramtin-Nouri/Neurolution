@@ -47,6 +47,9 @@ def choose_parents(fitness):
     """
     number_of_parents = NUM_AGENTS - ELITE_SIZE
     fitness = np.array(fitness) + EPSILON # s.t. we don't divide by 0 if all values are 0
+    if np.min(fitness) < 0 :
+        # offset in case values are in the negatives
+        fitness -= np.min(fitness) 
     probabilities = fitness/np.sum(fitness)
     idx = range(len(fitness)) # we only care about their indexes not their values
     parents = np.random.choice(idx , size=number_of_parents, p = probabilities)
@@ -82,6 +85,7 @@ def log_stats(fitnessList,step):
     tf.summary.scalar("Best Scoring Individual", np.max(fitnessList),step=step)
     tf.summary.scalar("Worst Scoring Individual", np.min(fitnessList),step=step)
     tf.summary.scalar("Mean Scoring", np.mean(fitnessList),step=step)
+    tf.summary.scalar("Variance", np.var(fitnessList),step=step)
 
 if __name__ == "__main__":
     should_run = True
