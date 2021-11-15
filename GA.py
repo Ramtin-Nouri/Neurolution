@@ -45,7 +45,7 @@ def choose_parents(fitness):
     partens: list of indexes
         (NUM_AGENTS - ELITE_SIZE) entries
     """
-    number_of_parents = NUM_AGENTS - ELITE_SIZE
+    number_of_parents = NUM_AGENTS - ELITE_SIZE - ALIENS
     fitness = np.array(fitness) + EPSILON # s.t. we don't divide by 0 if all values are 0
     if np.min(fitness) < 0 :
         # offset in case values are in the negatives
@@ -66,6 +66,7 @@ def init():
     tf.summary.text("Environment", ENV, step=0)
     tf.summary.text("Number of Agents", str(NUM_AGENTS), step=0)
     tf.summary.text("Number of Elites", str(ELITE_SIZE), step=0)
+    tf.summary.text("Number of New Agents", str(ALIENS), step=0)
     tf.summary.text("Maximum Simulation Steps", str(MAX_SIM_STEPS), step=0)
     tf.summary.text("Mutation Factor", str(MUTATION_FACTOR), step=0)
     # Create Agents
@@ -112,9 +113,12 @@ if __name__ == "__main__":
         for idx in elite_idx:
             agents[idx].id = len(new_generation)
             new_generation.append(agents[idx])
+        
+        for _ in range(ALIENS):
+            new_generation.append(Agent(ENV,len(new_generation)+1))
 
         for i in range(len(parent_idx)):
-            child_agent = Agent(ENV,i+len(elite_idx))
+            child_agent = Agent(ENV,len(new_generation)+1)
             child_agent.copy_brain(agents[parent_idx[i]])
             child_agent.mutate()
             new_generation.append(child_agent)
