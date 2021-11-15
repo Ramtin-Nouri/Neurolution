@@ -58,7 +58,7 @@ class Agent(Thread):
                 #if self.id==0:self.env.render()
 
     def get_action(self,state):
-        return self.brain.decide(state)
+        return self.brain.decide(state/255)
     
     def mutate(self):
         self.dna.get_dna()
