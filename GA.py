@@ -64,6 +64,7 @@ def init():
     tf.summary.text("Number of Agents", str(NUM_AGENTS), step=0)
     tf.summary.text("Number of Elites", str(ELITE_SIZE), step=0)
     tf.summary.text("Maximum Simulation Steps", str(MAX_SIM_STEPS), step=0)
+    tf.summary.text("Mutation Factor", str(MUTATION_FACTOR), step=0)
     # Create Agents
     print("Creating Agents")
     create_agents()
@@ -77,6 +78,10 @@ def close_signal(sig,frame):
     for agent in agents:
         agent.thread.join()
 
+def log_stats(fitnessList,step):
+    tf.summary.scalar("Best Scoring Individual", np.max(fitnessList),step=step)
+    tf.summary.scalar("Worst Scoring Individual", np.min(fitnessList),step=step)
+    tf.summary.scalar("Mean Scoring", np.mean(fitnessList),step=step)
 
 if __name__ == "__main__":
     should_run = True
@@ -88,7 +93,7 @@ if __name__ == "__main__":
 
         print(F"Running Generation {i}")
         fitness = episode()
-        tf.summary.scalar("Best Scoring Individual", np.max(fitness),step=i)
+        log_stats(fitness,i)
         
         # Declare Elite
         if ELITE_SIZE > 0:
@@ -101,7 +106,7 @@ if __name__ == "__main__":
         new_generation = []
         # Keep elite as is
         for idx in elite_idx:
-            agents[idx].id = idx
+            agents[idx].id = len(new_generation)
             new_generation.append(agents[idx])
 
         for i in range(len(parent_idx)):

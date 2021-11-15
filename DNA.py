@@ -1,5 +1,5 @@
 import numpy as np
-from Model import Brain
+from Config import MUTATION_FACTOR
 from pygad import kerasga
 class DNA():
     """
@@ -18,7 +18,7 @@ class DNA():
 
     """
     def __init__(self,brain):
-        self.mutation_factor = 0.05
+        self.mutation_factor = MUTATION_FACTOR
         self.initializeRandom()
         self.brain = brain
         self.vector = []
