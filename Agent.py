@@ -44,21 +44,22 @@ class Agent(Thread):
         self.fitness = 0
         obs = self.env.reset()
         nSteps = 0
+        # if id==0 print progressbar
         if self.id==0:
-            for _ in tqdm(range(MAX_SIM_STEPS)):
-                if done or not self.should_run :break
-                obs, reward, done, _ =  self.env.step(self.get_action(obs))
-                self.fitness += reward
-                nSteps += 1
+            loopRange = tqdm(range(MAX_SIM_STEPS))
         else:
-            while not done and self.should_run and nSteps < MAX_SIM_STEPS:
-                obs, reward, done, _ =  self.env.step(self.get_action(obs))
-                self.fitness += reward
-                nSteps += 1
-                #if self.id==0:self.env.render()
+            loopRange = range(MAX_SIM_STEPS)
+            
+        for _ in loopRange:
+            if done or not self.should_run :break
+            obs, reward, done, _ =  self.env.step(self.get_action(obs))
+            self.fitness += reward
+            nSteps += 1
+        # simulation finished. Print results
+        print(F"Fitness of agent {self.id}: {self.fitness}")
 
     def get_action(self,state):
-        return self.brain.decide(state/255)
+        return self.brain.decide(state)
     
     def mutate(self):
         self.dna.get_dna()

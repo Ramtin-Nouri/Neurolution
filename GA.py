@@ -27,8 +27,8 @@ def episode():
 
     fitness=[]
     for i in range(len(agents)):
+        print(F"waiting for agent {i}")
         agents[i].thread.join()
-        print(F"Fitness of agent {i}: {agents[i].fitness}")
         fitness.append(agents[i].fitness)
     return fitness
     
@@ -100,6 +100,7 @@ if __name__ == "__main__":
         fitness = episode()
         log_stats(fitness,i)
         
+        print("Creating next generation")
         # Declare Elite
         if ELITE_SIZE > 0:
             elite_idx = np.argsort(-np.array(fitness))[:ELITE_SIZE]
