@@ -9,7 +9,7 @@ import signal
 import tensorflow as tf
 physical_devices = tf.config.list_physical_devices('GPU') 
 if len(physical_devices) > 0:
-    tf.config.experimental.set_memory_growth(physical_devices[0], True)#
+    tf.config.experimental.set_memory_growth(physical_devices[0], True)
 else:
     print("ATTENTION: No GPU was found!")
 
@@ -98,6 +98,7 @@ if __name__ == "__main__":
 
         print(F"Running Generation {i}")
         fitness = episode()
+        if not should_run:break #Quit condition
         log_stats(fitness,i)
         
         print("Creating next generation")

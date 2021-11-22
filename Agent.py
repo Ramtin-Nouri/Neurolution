@@ -8,7 +8,7 @@ from Config import MAX_SIM_STEPS
 
 
 # TODO: set seeds?
-class Agent(Thread):
+class Agent():
     """
     Agent
 
@@ -43,9 +43,8 @@ class Agent(Thread):
         done = False
         self.fitness = 0
         obs = self.env.reset()
-        nSteps = 0
-        # if id==0 print progressbar
-        if self.id==0:
+        
+        if self.id==0: # if id==0 print progressbar
             loopRange = tqdm(range(MAX_SIM_STEPS))
         else:
             loopRange = range(MAX_SIM_STEPS)
@@ -54,7 +53,6 @@ class Agent(Thread):
             if done or not self.should_run :break
             obs, reward, done, _ =  self.env.step(self.get_action(obs))
             self.fitness += reward
-            nSteps += 1
         # simulation finished. Print results
         print(F"Fitness of agent {self.id}: {self.fitness}")
 
