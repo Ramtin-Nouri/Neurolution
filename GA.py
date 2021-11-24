@@ -5,7 +5,7 @@ import numpy as np
 import os
 from datetime import datetime
 import signal
-# No idead why but I need this to not get an error:
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 import tensorflow as tf
 physical_devices = tf.config.list_physical_devices('GPU') 
 if len(physical_devices) > 0:
