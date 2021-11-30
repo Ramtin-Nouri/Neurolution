@@ -4,8 +4,8 @@ from threading import Thread
 import gym
 from DNA import DNA
 from Model import Brain
-from Config import MAX_SIM_STEPS
-
+from Config import MAX_SIM_STEPS, WRAP_ENV,ENV
+import Environment
 
 # TODO: set seeds?
 class Agent():
@@ -25,7 +25,10 @@ class Agent():
     id: int
     """
     def __init__(self, envName,id):
-        self.env = gym.make(envName)
+        if WRAP_ENV:
+            self.env = Environment.EnvWrapper(ENV,True)
+        else:
+            self.env = gym.make(envName)
         shapeIn = list(self.env.observation_space.shape)
         shapeOut = self.env.action_space.n
         self.brain = Brain(shapeIn, shapeOut)

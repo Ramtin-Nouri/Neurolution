@@ -7,7 +7,9 @@ NUM_AGENTS = 25
 # Number of total generations
 EPISODES = 1000
 # OpenAi Gym Environment
-ENV = "Pong-ram-v0"
+ENV = "Pong-v4"
+# Use Custom Environment Wrapper
+WRAP_ENV = True
 # Number of individuals to keep unchanged
 ELITE_SIZE = 2
 # Number of completely new individuals introduced
