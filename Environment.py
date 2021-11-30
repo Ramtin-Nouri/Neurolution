@@ -69,7 +69,7 @@ class EnvWrapper():
         """
         observation = self.env.reset()
         if self.use_preprocessing:
-            observation = preprocess_frame_karpathy(observation)
+            observation = preprocess_frame_karpathy(observation,self.stack)
         else:
             observation = np.array(observation)/255
         if self.use_diff or self.stack:
