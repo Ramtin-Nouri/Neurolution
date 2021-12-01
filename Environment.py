@@ -1,6 +1,7 @@
 # from https://github.com/Ramtin-Nouri/TF2_Keras_Reinforce/blob/main/dataManager.py
 import os,random,cv2,numpy as np
 import gym
+from Config import MODELTYPE
 
 # preprocessing used by Karpathy (cf. https://gist.github.com/karpathy/a4166c7fe253700972fcbc77e4ea32c5)
 def preprocess_frame_karpathy(I,is2D):
@@ -44,17 +45,23 @@ class EnvWrapper():
 
         self.action_space = ActionSpace(self.env.action_space.n)
 
+        # Determine Observation Space
         class ObservationSpace():
             def __init__(self,s):
                 self.shape = s
 
-        if stack:
-            if use_preprocessing:
-                self.observation_space = ObservationSpace((2,80*80))
-            else:
-                self.observation_space = ObservationSpace((2,210,160,3))
+        if use_preprocessing:
+            shape = (80,80,1)
         else:
-            self.observation_space = ObservationSpace([80*80])
+            shape = (210,160,3)
+        
+        if MODELTYPE=="Dense":
+            shape = [np.prod(shape)]
+
+        if stack:
+            (2,) + shape
+
+        self.observation_space = ObservationSpace(shape)
     
     def reset(self):
         """
@@ -69,7 +76,7 @@ class EnvWrapper():
         """
         observation = self.env.reset()
         if self.use_preprocessing:
-            observation = preprocess_frame_karpathy(observation,self.stack)
+            observation = preprocess_frame_karpathy(observation,MODELTYPE=="CNN")
         else:
             observation = np.array(observation)/255
         if self.use_diff or self.stack:
@@ -97,7 +104,7 @@ class EnvWrapper():
         """
         observation, reward, done, info = self.env.step(action)
         if self.use_preprocessing:
-            observation = preprocess_frame_karpathy(observation,self.stack)
+            observation = preprocess_frame_karpathy(observation,MODELTYPE=="CNN")
         else:
             observation = np.array(observation)/255
         if not self.use_diff:
