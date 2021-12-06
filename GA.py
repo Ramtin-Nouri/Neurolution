@@ -46,10 +46,10 @@ def choose_parents(fitness):
         (NUM_AGENTS - ELITE_SIZE) entries
     """
     number_of_parents = NUM_AGENTS - ELITE_SIZE - ALIENS
-    fitness = np.array(fitness) + EPSILON # s.t. we don't divide by 0 if all values are 0
     if np.min(fitness) < 0 :
         # offset in case values are in the negatives
         fitness -= np.min(fitness) 
+    fitness = np.array(fitness) + EPSILON # s.t. we don't divide by 0 if all values are 0
     probabilities = fitness/np.sum(fitness)
     idx = range(len(fitness)) # we only care about their indexes not their values
     parents = np.random.choice(idx , size=number_of_parents, p = probabilities)
@@ -64,6 +64,8 @@ def init():
     file_writer.set_as_default()
     # Log some configs
     tf.summary.text("Environment", ENV, step=0)
+    tf.summary.text("Environment Wrapper", str(WRAP_ENV), step=0)
+    tf.summary.text("Model", MODELTYPE, step=0)
     tf.summary.text("Number of Agents", str(NUM_AGENTS), step=0)
     tf.summary.text("Number of Elites", str(ELITE_SIZE), step=0)
     tf.summary.text("Number of New Agents", str(ALIENS), step=0)
