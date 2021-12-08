@@ -70,7 +70,8 @@ def init():
     tf.summary.text("Number of Elites", str(ELITE_SIZE), step=0)
     tf.summary.text("Number of New Agents", str(ALIENS), step=0)
     tf.summary.text("Maximum Simulation Steps", str(MAX_SIM_STEPS), step=0)
-    tf.summary.text("Mutation Factor", str(MUTATION_FACTOR), step=0)
+    tf.summary.text("Mutation Factors", F"Sub:{MUTATION_FACTOR_SUBSTITUTE},InsDel:{MUTATION_FACTOR_INSERT_DELETE} \
+    , Inverse:{MUTATION_FACTOR_INVERT}, Duplicate:{MUTATION_FACTOR_DUPLICATE}", step=0)
     # Create Agents
     print("Creating Agents")
     create_agents()
