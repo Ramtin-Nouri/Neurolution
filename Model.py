@@ -23,7 +23,8 @@ class Brain():
         self.model.add(Softmax())
 
     def createModel(self, inputShape, nActions):
-        self.model.add(Dense(128,activation="sigmoid",input_shape=inputShape))
+        self.model.add(Dense(64,activation="sigmoid",input_shape=inputShape))
+        self.model.add(Dense(128,activation="sigmoid"))
         self.model.add(Dense(nActions,activation="sigmoid"))
         self.model.add(Softmax())
 

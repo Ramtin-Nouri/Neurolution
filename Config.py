@@ -25,3 +25,5 @@ MUTATION_FACTOR_DUPLICATE = 0.1
 MUTATION_FACTOR_INVERT = 0.1
 # Type of Model: choice between Dense and CNN
 MODELTYPE = "Dense"
+# Whether to have asexual reproduction or include crossover
+IS_ASEXUAL = False

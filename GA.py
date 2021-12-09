@@ -52,7 +52,12 @@ def choose_parents(fitness):
     fitness = np.array(fitness) + EPSILON # s.t. we don't divide by 0 if all values are 0
     probabilities = fitness/np.sum(fitness)
     idx = range(len(fitness)) # we only care about their indexes not their values
-    parents = np.random.choice(idx , size=number_of_parents, p = probabilities)
+    if IS_ASEXUAL:
+        parents = np.random.choice(idx , size=number_of_parents, p = probabilities)
+    else:
+        parents = np.array([])
+        for _ in range(number_of_parents):
+            np.append(parents, np.random.choice(idx , size=2, p = probabilities))
     return parents
 
 def init():
@@ -124,7 +129,11 @@ if __name__ == "__main__":
 
         for i in range(len(parent_idx)):
             child_agent = Agent(ENV,len(new_generation)+1)
-            child_agent.copy_brain(agents[parent_idx[i]])
+            if IS_ASEXUAL:
+                child_agent.copy_brain(agents[parent_idx[i]])
+            else:
+                child_agent.copy_brain(agents[parent_idx[i][0]])
+                child_agent.dna.crossover(agents[parent_idx[i][1]])
             child_agent.mutate()
             new_generation.append(child_agent)
         

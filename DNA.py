@@ -33,7 +33,15 @@ class DNA():
         kerasga.model_weights_as_matrix(self.brain.model, self.vector)
 
     def crossover(self, otherDNA):
-        pass
+        self.get_dna()
+        otherDNA.get_dna()
+
+        mask = np.random.choice([0, 1],
+         size=len(self.vector), p=((0.5 , 0.5)).astype(np.bool))
+        self.vector[mask] = otherDNA.vector[mask]
+
+        self.set_dna()
+        otherDNA.set_dna()
 
     def mutate(self):
         """Mutation is implemented inspired by different kinds of bio-inspired types.
@@ -87,5 +95,3 @@ class DNA():
         l = len(self.vector)
         seq_len = max(2, min((l-ind_inv), int(random.normalvariate(5,3)), l//10))
         self.vector[ind_inv:ind_inv+seq_len] = self.vector[ind_inv:ind_inv+seq_len][::-1]
-       
-        
