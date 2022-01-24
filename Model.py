@@ -30,7 +30,7 @@ class Brain():
 
 
     def decide(self,state):
-        return np.argmax(self.model.predict(np.expand_dims(state,axis=0)))
+        return np.argmax(self.model(np.expand_dims(state,axis=0)))
 
     def create_brain_from_dna(self, dna):
         kerasga.model_weights_as_matrix(self.model, dna)
