@@ -1,23 +1,17 @@
 # Neurolution
-Neuro-Evolution
+A Neuro-Evolution implementation. Developed for the Uni-Hamburg *bio-inspired artificial intelligence* seminar.
 
-# Main Considerations
-## Encoding
-I will first try with a direct encoding. I'll use the values of the weights and baiases.
-Each layer's weights and biases will be considered one gene.
+# About 
+Evolves a neural network (implemented in tensprflow.keras) to learn to play Pong (using the OpenAI Gym environment). I implement 4 different mutation types and crossover.  
+The parents of the next generation are chosen using the roulette wheel selection. Also the $n$ best scoring individuals are always kept unchanged for the next generation. $n$ can be changed in the config.py under ELITE_SIZE. ALIENS defines the number of totally random individuals that are additionally also added to each generation.
 
-## Mutation
+Two models are defined. A dense network and a convolutional one.
 
-# Survival
-## Minimal Fitness
-Especially in the first generations it may occur, that no single individual reaches any reasonable fitness.
-One way to counter this would be increasing the pool of individuals. This will need more computational power and will can not scale unlimited. Therefore I introduce a fitness threshold under which all individuals will die instantly and be replaced with new ones in the next generation.
+# Dependencies
+- numpy 
+- tensorflow2
+- pygad
 
-## Elitism
-Top 5% of individuals will remain unchanged for the next generation.
-
-## Offspring
-Parents will be choosen randomly weighted by their fitness. The fitter an indiviual the more likely it will be chosen.
-
-# Mutation
-Randomly change n values of each gene?
+# Execute
+- update the config.py with your desired values
+- run ```python3 GA.py```
