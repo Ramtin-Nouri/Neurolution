@@ -11,6 +11,7 @@ Two models are defined. A dense network and a convolutional one.
 - numpy 
 - tensorflow2
 - pygad
+- Openai Gym[atari]
 
 # Execute
 - update the config.py with your desired values
