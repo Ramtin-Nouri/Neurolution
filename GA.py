@@ -1,3 +1,6 @@
+"""
+    The project's main script. Will execute the genetic algorithm. Please read README.md for more details
+"""
 from Config import *
 from Agent import Agent
 import time
@@ -5,22 +8,25 @@ import numpy as np
 import os
 from datetime import datetime
 import signal
-os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+# Actually code is more efficient without the GPU
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1" 
 import tensorflow as tf
 physical_devices = tf.config.list_physical_devices('GPU') 
 if len(physical_devices) > 0:
     tf.config.experimental.set_memory_growth(physical_devices[0], True)
 else:
-    print("ATTENTION: No GPU was found!")
+    print("No GPU was found. (this is actually a good thing)")
 
 
 def create_agents():
+    """Create the initial pool"""
     global agents
     agents = []
     for i in range(NUM_AGENTS):
         agents.append(Agent(ENV,i))
 
 def episode():
+    """Simulate one generation"""
     global agents
     for agent in agents:
         agent.run()
@@ -61,6 +67,7 @@ def choose_parents(fitness):
     return parents
 
 def init():
+    """Create tensorboard logger and initial population"""
     # Create folder for logging
     today = datetime.today()
     time = "%04d-%02d-%02d-%02d-%02d-%02d/" % (today.year,today.month,today.day,today.hour,today.minute,today.second)
@@ -83,6 +90,7 @@ def init():
     create_agents()
 
 def close_signal(sig,frame):
+    """Ctrl-C callback"""
     global should_run
     print("Ctrl-C detected. Quitting...")
     should_run = False
@@ -92,6 +100,7 @@ def close_signal(sig,frame):
         agent.thread.join()
 
 def log_stats(fitnessList,step):
+    """Write current generations statistics to tensorboard"""
     tf.summary.scalar("Best Scoring Individual", np.max(fitnessList),step=step)
     tf.summary.scalar("Worst Scoring Individual", np.min(fitnessList),step=step)
     tf.summary.scalar("Mean Scoring", np.mean(fitnessList),step=step)

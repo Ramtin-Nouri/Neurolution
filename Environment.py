@@ -1,5 +1,5 @@
 # from https://github.com/Ramtin-Nouri/TF2_Keras_Reinforce/blob/main/dataManager.py
-import os,random,cv2,numpy as np
+import numpy as np
 import gym
 from Config import MODELTYPE
 

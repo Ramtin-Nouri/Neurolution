@@ -1,4 +1,3 @@
-import numpy as np
 from tqdm import tqdm
 from threading import Thread
 import gym
@@ -39,10 +38,12 @@ class Agent():
         self.should_run = True
 
     def run(self):
+        """Start thread"""
         self.thread = Thread(target=self.simulate)
         self.thread.start()
 
     def simulate(self):
+        """Thread loop"""
         done = False
         self.fitness = 0
         obs = self.env.reset()
@@ -60,14 +61,17 @@ class Agent():
         print(F"Fitness of agent {self.id}: {self.fitness}")
 
     def get_action(self,state):
+        """Return (neural network's choice of) best action given game state"""
         return self.brain.decide(state)
     
     def mutate(self):
+        """Mutate DNA"""
         self.dna.get_dna()
         self.dna.mutate()
         self.brain.create_brain_from_dna(self.dna.vector)
 
     def copy_brain(self, otherAgent):
+        """Copy DNA of given Agent to this agent's DNA"""
         otherAgent.dna.get_dna()
         self.dna.vector = otherAgent.dna.vector.copy()
         self.dna.set_dna()
